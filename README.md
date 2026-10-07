@@ -1,55 +1,61 @@
 # RoadWatch AI
 
-RoadWatch is a classroom traffic-safety demo. The main application is a browser frontend that runs an ONNX YOLO11n model on uploaded photos or up to 30 sampled video frames. It displays motorcycles, riders, helmet evidence, and possible triple riding for human review. The repository also includes the trained checkpoint and the scripts used to prepare data, train, evaluate, and export the model.
+RoadWatch is a classroom traffic-safety demo. The frontend runs the ONNX YOLO11n model in the browser. The FastAPI backend serves the frontend and exposes image/video prediction endpoints using the included YOLO checkpoint. Both paths provide preliminary detections for human review.
 
-## Run the source application
+## Install and run
 
-Use Python 3.12 and a modern browser. The web application loads ONNX Runtime Web from its CDN, so keep an internet connection available.
+Use Python 3.12 and a modern browser. The browser app loads ONNX Runtime Web from its CDN, so keep an internet connection available.
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python serve.py
+Copy-Item .env.example .env
+python -m uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Open the printed URL, normally [http://127.0.0.1:8000/frontend/](http://127.0.0.1:8000/frontend/). The source frontend is in `frontend/`; it loads `frontend/app.js`, the ONNX model from `model/`, and the sample clip in `outputs/traffic-watch/`. Uploaded media is processed in the browser and is not uploaded to a RoadWatch server.
+Open `http://127.0.0.1:8000/` for the frontend and `http://127.0.0.1:8000/docs` for interactive API docs. The current frontend continues to run browser inference; backend prediction endpoints are available to other clients and for future UI integration. See [`backend/README.md`](backend/README.md) for endpoints and upload limits.
 
-For a quick command-line prediction on an image or video:
+For the static frontend without the API, `python serve.py` serves the source app. For command-line prediction:
 
 ```powershell
-python predict.py path	o\image.jpg
-python predict.py path	o\clip.mp4 --device cpu
+python predict.py path\to\image.jpg
+python predict.py path\to\clip.mp4 --device cpu
 ```
 
-Predictions are written under `results/predictions/` and ignored by Git.
+Prediction renders go under `results/predictions/` and are ignored by Git. The backend processes uploads in memory or temporary system files and removes them after inference; it does not store uploaded media or evidence.
 
 ## Main source structure
 
 ```text
-frontend/                         Source browser UI: HTML, CSS, and JavaScript
+backend/                           FastAPI app, settings, schemas, model inference
+frontend/                          Source browser UI: HTML, CSS, and JavaScript
 model/
-  roadwatch-yolo.onnx             Browser inference model
-  weights/best.pt                 Fine-tuned YOLO checkpoint
-  classes.yaml                    Model class order
-scripts/                          Data conversion, training, and evaluation source
-predict.py                        Image/video CLI using the included checkpoint
-serve.py                          Local development server for the source frontend
-requirements.txt                  Python training and CLI dependencies
-.env.example                      Documents that this browser-only app needs no secrets
-results/model-evaluation.md       Held-out evaluation report
-outputs/traffic-watch/            Standalone release/demo and release tooling
-outputs/roadwatch-website.zip     Downloadable standalone demo
+  roadwatch-yolo.onnx              Browser inference model
+  weights/best.pt                  Fine-tuned YOLO checkpoint
+  classes.yaml                     Model class order
+scripts/                           Data conversion, training, and evaluation source
+predict.py                         Image/video CLI using the included checkpoint
+serve.py                           Static development server for the source frontend
+requirements.txt                   Python backend, training, and CLI dependencies
+.env.example                       Safe local backend configuration defaults
+results/model-evaluation.md        Held-out evaluation report
+outputs/traffic-watch/             Standalone release/demo and release tooling
+outputs/roadwatch-website.zip      Downloadable standalone demo
 ```
 
-This project currently has no Python backend, database, persistent upload store, or server-side evidence system. The demo keeps uploads in the browser, so `backend/`, `database/`, `evidence/`, and persistent `uploads/` directories are not applicable and were not fabricated. The files in `outputs/traffic-watch/` are the packaged demo; they no longer stand in for the main source tree.
+There is no database or persistent upload/evidence subsystem. Backend uploads are temporary. The files under `outputs/traffic-watch/` are the packaged demo and release tools; the main app source is in the top-level `backend/`, `frontend/`, `model/`, and `scripts/` directories.
 
 ## Model and evaluation
 
 The included YOLO11n model was fine-tuned for 8 epochs on 4,644 training images at 512px and batch size 8 on CPU. Training validation used 117 images. The separate held-out test set has 78 images and 497 labeled instances. Current results are mAP@50 **0.884** and mAP@50–95 **0.472**. See [`results/model-evaluation.md`](results/model-evaluation.md) for class-level precision, recall, and AP.
 
 Results are preliminary and describe this dataset and camera style. The detector can miss or miscount unseen examples. Helmet evidence may be occluded or associated with the wrong rider. Red-light crossing is not assessed. A missing alert does not establish compliance; review the original media.
+
+## Backend configuration
+
+`.env` is optional. `ROADWATCH_MODEL_PATH`, `ROADWATCH_DEVICE`, `ROADWATCH_IMAGE_MAX_MB`, `ROADWATCH_VIDEO_MAX_MB`, and `ROADWATCH_MAX_VIDEO_FRAMES` are documented in `.env.example`. The API binds to localhost by default and has no authentication; keep it private unless authentication and deployment-specific upload controls are added.
 
 ## Train and evaluate
 
@@ -67,4 +73,4 @@ Keep the 78-image test split out of training and checkpoint selection. For detai
 
 ## Ignore and secret handling
 
-`.gitignore` excludes `.env` files except `.env.example`, credentials, Python environments/caches, downloaded datasets, uploads, generated prediction/training output, raw video formats, and unrelated checkpoints. The included `model/weights/best.pt` is explicitly allowed; it is a 5.45 MB project checkpoint. Do not add API keys, passwords, tokens, private footage, or dataset files.
+`.gitignore` excludes `.env` files except `.env.example`, credentials, Python environments/caches, downloaded datasets, generated uploads/predictions/training output, raw video formats, and unrelated checkpoints. The included `model/weights/best.pt` is explicitly allowed; it is a 5.45 MB project checkpoint. Do not add API keys, passwords, tokens, private footage, or dataset files.
