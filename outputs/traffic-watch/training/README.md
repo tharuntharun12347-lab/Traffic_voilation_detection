@@ -52,6 +52,8 @@ Compare overall mAP@50 and the motorcycle, helmet-on, no-helmet, rider, and trip
 
 ## Update and package the page
 
+Whenever a new evaluation report is delivered, update the learning panel from that report and the matching training history, rebuild the standalone page and ZIP, and open the refreshed page preview. Check that the panel's headline and per-class values match the report before sharing it. Keep the report, panel, standalone page, and ZIP in sync as one release.
+
 When a candidate is accepted, copy it to `outputs\traffic-watch\roadwatch-yolo.onnx`, then update the learning panel using that run's validation history. Rebuild the standalone page first, then the ZIP:
 
 ```powershell
