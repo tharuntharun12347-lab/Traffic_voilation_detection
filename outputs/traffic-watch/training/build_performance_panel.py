@@ -95,13 +95,13 @@ def main() -> None:
         body.append(
             '<div class="bench-row">'
             f'<div class="bench-label">{name}<small>AP@50</small></div>'
-            f'<div class="bench-meter" role="img" aria-label="{name} AP at 50 {ap:.0%}"><span style="width:{ap*100:.1f}%"></span></div>'
-            f'<strong>{ap:.0%}</strong><div class="bench-pr">P {float(row["precision"]):.0%} · R {float(row["recall"]):.0%}</div>'
+            f'<div class="bench-meter" role="img" aria-label="{name} AP at 50 {ap:.1%}"><span style="width:{ap*100:.1f}%"></span></div>'
+            f'<strong>{ap:.1%}</strong><div class="bench-pr">P {float(row["precision"]):.1%} · R {float(row["recall"]):.1%}</div>'
             '</div>'
         )
     panel = f'''<section class="benchmark" id="results">
 <div class="cap-heading"><div><div class="cap-kicker">Independent model check · 78 held-out images</div><h2>Measured on frames the model never trained on.</h2></div><p>Test-set results, reported per class. Scores describe this dataset and camera style; they are not guarantees for new footage.</p></div>
-<div class="benchmark-grid"><article class="benchmark-score"><div class="score-ring" style="--score:{map50*100:.1f}%"><div><strong>{map50:.0%}</strong><span>mAP@50</span></div></div><div class="score-caption">Across all five detection labels</div><div class="score-secondary"><span>mAP@50–95</span><b>{map95:.0%}</b></div><div class="score-secondary"><span>Test frame size</span><b>512 px</b></div></article>
+<div class="benchmark-grid"><article class="benchmark-score"><div class="score-ring" style="--score:{map50*100:.1f}%"><div><strong>{map50:.1%}</strong><span>mAP@50</span></div></div><div class="score-caption">Across all five detection labels</div><div class="score-secondary"><span>mAP@50–95</span><b>{map95:.1%}</b></div><div class="score-secondary"><span>Test frame size</span><b>512 px</b></div></article>
 <article class="benchmark-classes"><div class="benchmark-table-head"><span>Detection class</span><span>AP@50</span><span>Precision · recall</span></div>{''.join(body)}</article></div>
 <article class="learning-card"><div class="learning-head"><div><div class="cap-kicker">Training trace · validation split</div><h3>Detection quality improved over the fine-tune.</h3></div><span>117 validation images · {len(history)} epochs</span></div>{svg}</article>
 <div class="review-note"><div class="review-note-mark">i</div><div><strong>How to read this score</strong><span>mAP measures box quality and class ranking at a chosen overlap threshold; it is not a percentage of frames classified correctly. The browser requires a 35% triple-riding confidence cue; on the held-out test split that cutoff gave 94.4% precision and 89.4% recall for that class. The test sample is small, and no alert does not rule out a violation.</span></div></div>
