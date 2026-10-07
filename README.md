@@ -59,9 +59,9 @@ Results are preliminary and describe this dataset and camera style. The detector
 
 ## Train and evaluate
 
-The dataset is not included. Download **Traffic Rule Violation Detection Dataset in Dhaka Urban Traffic Environment, v1** from the [Mendeley Data record](https://doi.org/10.17632/ycv2mbph4b.1). It is by Ashesh Bar, Manobendra Biswas, Abir Hasan, Marufur Rahman Mithu, Faisal Ahmad, and Tonmoy Das and is licensed CC BY-NC 4.0. The dataset and derived model are for non-commercial use under the applicable license terms unless separate permission is obtained. Preserve attribution when sharing. Do not put source/converted images or annotations into Git.
+The prepared YOLO-format dataset is included under `data/processed/yolo-data/`; image files are stored with Git LFS. Install Git LFS and run `git lfs pull` after cloning to fetch them. The source is **Traffic Rule Violation Detection Dataset in Dhaka Urban Traffic Environment, v1** from the [Mendeley Data record](https://doi.org/10.17632/ycv2mbph4b.1), by Ashesh Bar, Manobendra Biswas, Abir Hasan, Marufur Rahman Mithu, Faisal Ahmad, and Tonmoy Das, licensed CC BY-NC 4.0. The dataset and derived model are for non-commercial use unless separate permission is obtained. Preserve attribution when sharing; see [data/DATASET_AND_LIMITATIONS.md](data/DATASET_AND_LIMITATIONS.md).
 
-After extracting the `augmented_dataset` with `train`, `valid`, and `test` subfolders:
+The included `data/processed/yolo-data/traffic.yaml` is ready to use after `git lfs pull`. To regenerate it from the original COCO package, extract its `augmented_dataset` with `train`, `valid`, and `test` subfolders:
 
 ```powershell
 python scripts/prepare_yolo_data.py --dataset-root "data/source/augmented_dataset" --output "data/processed/yolo-data"
@@ -73,4 +73,5 @@ Keep the 78-image test split out of training and checkpoint selection. For detai
 
 ## Ignore and secret handling
 
-`.gitignore` excludes `.env` files except `.env.example`, credentials, Python environments/caches, downloaded datasets, generated uploads/predictions/training output, raw video formats, and unrelated checkpoints. The included `model/weights/best.pt` is explicitly allowed; it is a 5.45 MB project checkpoint. Do not add API keys, passwords, tokens, private footage, or dataset files.
+`.gitignore` excludes `.env` files except `.env.example`, credentials, Python environments/caches, downloaded datasets, generated uploads/predictions/training output, raw video formats, and unrelated checkpoints. The included `model/weights/best.pt` is explicitly allowed; it is a 5.45 MB project checkpoint. Do not add API keys, passwords, tokens, private footage, or raw video. The prepared, attributed YOLO dataset is included with Git LFS.
+

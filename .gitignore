@@ -19,7 +19,12 @@ __pycache__/
 .ruff_cache/
 
 # Dataset files, personal uploads, raw footage, and generated frames
-/data/
+/data/*
+!/data/processed/
+/data/processed/*
+!/data/processed/yolo-data/
+!/data/processed/yolo-data/**
+!/data/DATASET_AND_LIMITATIONS.md
 uploads/
 traffic_frames/
 *.mp4
@@ -48,3 +53,4 @@ Ultralytics/
 # Generated expanded release tree and private handoff note
 outputs/roadwatch-website/
 /ROADWATCH-NEXT-SESSION.md
+
