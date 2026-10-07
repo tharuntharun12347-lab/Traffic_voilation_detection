@@ -1,21 +1,50 @@
-# Local dataset, converted data, and training outputs
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+*.p12
+credentials.json
+
+# Python environments, caches, and test output
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Dataset files, personal uploads, raw footage, and generated frames
+/data/
+uploads/
+traffic_frames/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.mpeg
+*.mpg
+
+# Local training and prediction output
+runs/
+results/predictions/
 outputs/.roadwatch-training/
 outputs/traffic-watch/training/runs/
 outputs/traffic-watch/training/*.log
-
-# Local runtimes, dependency caches, and editor output
 work/
-runs/
 Ultralytics/
-__pycache__/
-*.py[cod]
-
-# Model checkpoints and transient training files
-*.pt
 *.cache
 *.tmp
-.venv/
-/ROADWATCH-NEXT-SESSION.md
 
-# Expanded release staging tree
+# Keep the compact released checkpoint; ignore other downloaded/trained checkpoints
+*.pt
+!model/weights/
+!model/weights/*.pt
+
+# Generated expanded release tree and private handoff note
 outputs/roadwatch-website/
+/ROADWATCH-NEXT-SESSION.md
