@@ -1,0 +1,21 @@
+# Local dataset, converted data, and training outputs
+outputs/.roadwatch-training/
+outputs/traffic-watch/training/runs/
+outputs/traffic-watch/training/*.log
+
+# Local runtimes, dependency caches, and editor output
+work/
+runs/
+Ultralytics/
+__pycache__/
+*.py[cod]
+
+# Model checkpoints and transient training files
+*.pt
+*.cache
+*.tmp
+.venv/
+/ROADWATCH-NEXT-SESSION.md
+
+# Expanded release staging tree
+outputs/roadwatch-website/
