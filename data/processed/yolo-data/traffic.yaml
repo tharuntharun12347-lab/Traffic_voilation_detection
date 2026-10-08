@@ -1,4 +1,4 @@
-path: .
+path: data/processed/yolo-data
 train: images/train
 val: images/valid
 test: images/test
@@ -8,3 +8,4 @@ names:
   2: no_helmet
   3: rider
   4: triple_riding
+
